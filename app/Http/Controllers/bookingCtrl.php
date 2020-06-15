@@ -51,5 +51,22 @@ class bookingCtrl extends Controller
 		}else{
 			return redirect()->to('login');
 		}
-    }
+	}
+	
+	//single booking
+	public function singleBooking($id)
+	{
+		$client = new \GuzzleHttp\Client();
+		$token = Session::get('token');
+		$url = 'https://api.paparazzme.blazingtrail.in/v1/admin/getOneBooking/?id='.$id;
+		$response = $client->get($url, [
+			'headers' => ['auth' => $token]
+		]);
+		if($response->getStatusCode() == 200){
+			$res = json_decode($response->getBody()->getContents());
+			$result[0] = $res;
+			$data['photographers'] = $result;
+			return view('singlebooking', $data);
+		}
+	}
 }

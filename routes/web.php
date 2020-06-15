@@ -36,6 +36,6 @@ Route::post('update-subscriber', 'subscriberCtrl@update');
 Route::get('delete-subscriber/{id}', 'subscriberCtrl@delete');
 Route::get('status-subscriber/{id}', 'subscriberCtrl@status');
 
-
+Route::get('single-booking/{id}', 'bookingCtrl@singleBooking');
 Route::get('booking', 'bookingCtrl@index');
 

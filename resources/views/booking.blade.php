@@ -95,6 +95,7 @@
                         <th>Payment Mode</th>
                         <th>Rating</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,6 +133,7 @@
                         @else
                         <td><span class="label label-pending">Pending</span></td>
                         @endif
+                        <td><a href="{{url('single-booking/'.$booking->_id)}}"><i class="fas fa-eye"></i></a></td>
                     </tr>
                   @endforeach
                 </tbody>
