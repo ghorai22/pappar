@@ -18,7 +18,7 @@ class loginCtrl extends Controller
     		'email' => $request->email,
     		'deviceToken' => 'dashboard',
     		'socialid' => 'dashboard',
-    		'submitType' => 'Form',
+    		'submitType' => 'FB',
     		'pwd' => $request->password
     	];
     	$url = 'https://api.paparazzme.blazingtrail.in/v1/authentication';
@@ -30,30 +30,24 @@ class loginCtrl extends Controller
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
 			$result = $res->resdata;
-			Session::put('userid', $result[0]->_id);
-            Session::put('loginType', $result[0]->loginType);
-			// Session::put('loginType', 'admin');
-			Session::put('token', $res->token);
-			return redirect()->to('/');
+            if ($result[0]->loginType == 'admin') {
+    			Session::put('userid', $result[0]->_id);
+                Session::put('name', $result[0]->fullname);
+                Session::put('loginType', $result[0]->loginType);
+    			Session::put('token', $res->token);
+    			return redirect()->to('/');
+            }else{
+                Session::flash('error', 'Admin access only!');
+                return redirect()->back();
+            }
 		}else{
 			Session::flash('error', 'Something wrong!');
-			return redirect()->back();;
+			return redirect()->back();
 		}
     }
+    public function logout()
+    {
+        Session::flush();
+        return redirect()->to('login');
+    }
 }
-
-
-
-// $amount = $request->get('amount');
-// $client = new \GuzzleHttp\Client();
-// $url   = "http://192.168.150.16:7585/api/v1/Transaction/GetTransactionNumber";
-// $data   = [
-//             "amount"      => $amount,
-//             "something"   => "1",
-//             "description" => "desc",
-//           ];
-
-// $requestAPI = $client->post( $url, [
-//         'headers' => ['Content-Type' => 'application/json'],
-//         'body' => json_encode($data);
-//     ]);

@@ -10,40 +10,35 @@ class subscriberCtrl extends Controller
 {
     public function index()
     {
-  //   	$client = new \GuzzleHttp\Client();
-  //   	if(Session::exists('userid')){
-  //   		$token = Session::get('token');
-  //   		if(Session::get('loginType') == 'user'){
-		//     	$id = Session::get('userid');
-		//     	$url = 'https://api.paparazzme.blazingtrail.in/v1/getOne?id='.$id;
-		// 		$response = $client->get($url, [
-		// 			'headers' => ['auth' => $token]
-		// 		]);
-		// 		if($response->getStatusCode() == 200){
-		// 			$res = json_decode($response->getBody()->getContents());
-		// 			$result[0] = $res;
-		// 			$data['subscribers'] = $result;
-		// 			return view('subscribers', $data);
-		// 		}
-		// 	}else{
-		// 		$url = 'https://api.paparazzme.blazingtrail.in/v1/admin/getAll/?loginType=user';
-		// 		$response = $client->get($url, [
-		// 			'headers' => ['auth' => $token]
-		// 		]);
-		// 		if($response->getStatusCode() == 200){
-		// 			$res = json_decode($response->getBody()->getContents());
-		// 			echo "<pre>";
-		// 			print_r($res);
-		// 			die();
-		// 			$data['subscribers'] = $res;
-		// 			return view('subscribers', $data);
-		// 		}
-		// 	}
-		// }else{
-		// 	return redirect()->to('login');
-		// }
-		$data['subscribers'] = [];
-		return view('subscribers', $data);
+    	$client = new \GuzzleHttp\Client();
+    	if(Session::exists('userid')){
+    		$token = Session::get('token');
+    		if(Session::get('loginType') == 'user'){
+		    	$id = Session::get('userid');
+		    	$url = 'https://api.paparazzme.blazingtrail.in/v1/getOne?id='.$id;
+				$response = $client->get($url, [
+					'headers' => ['auth' => $token]
+				]);
+				if($response->getStatusCode() == 200){
+					$res = json_decode($response->getBody()->getContents());
+					$result[0] = $res;
+					$data['subscribers'] = $result;
+					return view('subscribers', $data);
+				}
+			}else{
+				$url = 'https://api.paparazzme.blazingtrail.in/v1/admin/getAll/?loginType=user';
+				$response = $client->get($url, [
+					'headers' => ['auth' => $token]
+				]);
+				if($response->getStatusCode() == 200){
+					$res = json_decode($response->getBody()->getContents());
+					$data['subscribers'] = $res;
+					return view('subscribers', $data);
+				}
+			}
+		}else{
+			return redirect()->to('login');
+		}
     }
     public function single($id)
     {
@@ -70,14 +65,11 @@ class subscriberCtrl extends Controller
     		'billingAddress' => $request->address
     	];
 		$response = $client->put($url, [
-			'headers' => ['auth' => $token],
-			'body' => json_encode($data)
+		  'json' => $data,
+		  'headers' => ['auth' => $token]
 		]);
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
-			echo "<pre>";
-			print_r($res);
-			die();
 			return Response::json($res);
 		}
     }
@@ -99,7 +91,7 @@ class subscriberCtrl extends Controller
     	$token = Session::get('token');
     	$client = new \GuzzleHttp\Client();
     	$url = 'https://api.paparazzme.blazingtrail.in/v1/admin/change-status?id='.$id;
-		$response = $client->delete($url, [
+		$response = $client->get($url, [
 			'headers' => ['auth' => $token]
 		]);
 		if($response->getStatusCode() == 200){

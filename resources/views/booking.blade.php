@@ -1,8 +1,77 @@
 @extends('layout_master.layout')
 @section('content')
 
+<style type="text/css">
+  .label-pending {
+    background-color: #f0ad4e;
+  }
+  .label-success {
+    background-color: #5cb85c;
+  }
+  .label-danger {
+    background-color: #d9534f;
+  }
+  .label-info {
+    background-color: #5bc0de;
+  }
+  .label {
+    text-shadow: none!important;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 3px 6px;
+    color: #fff;
+  }
+</style>
 <!-- The Modal -->
+<div class="modal show" id="viewModal" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">User Details</h4>
+        <button type="button" class="close" data-dismiss="modal" id="closeModal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form id="userForm" method="post" enctype="multipart/form-data">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3">
+              <img src="public/loader.gif" id="dp" style="height: auto; width: 150px;">
+            </div>
+            <div class="col-md-9" id="abc">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Full Name</label>
+                  <h4 id="name">Bikash Ghorai</h4>
+                </div>
+                <div class="col-md-6">
+                  <label>Phone</label>
+                  <h4 id="phone">9679928900</h4>
+                </div>
+                <div class="col-md-12">
+                  <label>Email</label>
+                  <h4 id="email">testadmin@gmail.com</h4>
+                </div>
+                <div class="col-md-12">
+                  <label>Address</label>
+                  <h4 id="address">Garia, Kolkata, WB - 721156</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="kt-subheader  kt-grid__item" id="kt_subheader">
     <div class="kt-container  kt-container--fluid ">
         <div class="kt-subheader__main">
@@ -26,17 +95,43 @@
                         <th>Payment Mode</th>
                         <th>Rating</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                   @foreach($bookings as $booking)
                     <tr>
-                      <td>{{$booking->udetails[0]->fullname}}</td>
-                      <td>{{$booking->pdetails[0]->fullname}}</td>
-                      <td>{{$booking->currentlang_lat[0]}}, {{$booking->currentlang_lat[0]}}</td>
-                      <td>{{date('F jS, Y', strtotime($booking->created_at))}}</td>
-                      <td>{{$booking->estimatePaymenyt}}</td>
+                        @if(count($booking->udetails) > 0)
+                        <td>{{$booking->udetails[0]->fullname}} <a href="#!" onclick="viewUser('{{$booking->udetails[0]->_id}}');"><i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                        @else
+                        <td></td>
+                        @endif
+                        @if(count($booking->pdetails) > 0)
+                        <td>{{$booking->pdetails[0]->fullname}} <a href="#!" onclick="viewPhgrapher('{{$booking->pdetails[0]->_id}}');"><i class="fa fa-info-circle" aria-hidden="true"></i></a></td>
+                        @else
+                        <td></td>
+                        @endif
+                        @if(count($booking->currentlang_lat) > 0)
+                        <td>{{$booking->currentlang_lat[0]}}, {{$booking->currentlang_lat[0]}}</td>
+                        @else
+                        <td></td>
+                        @endif
+                        <td>{{date('F jS, Y', strtotime($booking->created_at))}}</td>
+                        <td>{{$booking->estimatePayment}}</td>
+                        <td>{{$booking->payment_mode}}</td>
+                        @if(count($booking->rdetails) > 0)
+                        <td>$booking->rdetails[0]</td>
+                        @else
+                        <td></td>
+                        @endif
+                        @if($booking->confirmFlag != 0)
+                        <td><span class="label label-info">Confirmed</span></td>
+                        @elseif($booking->cancelFlag != 0)
+                        <td><span class="label label-danger">Canceled</span></td>
+                        @elseif($booking->completeFlag != 0)
+                        <td><span class="label label-success">Complete</span></td>
+                        @else
+                        <td><span class="label label-pending">Pending</span></td>
+                        @endif
                     </tr>
                   @endforeach
                 </tbody>
@@ -44,4 +139,37 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function viewUser(id) {
+        $(".modal-title").html('User Details');
+        $("#dp").attr('src', 'public/loader.gif');
+        $.get('single-subscriber/'+id, function(data){
+            console.log(data);
+            let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
+            let img = url.replace("public", "static");
+            $("#dp").attr('src', img);
+            $("#name").html(data.fullname);
+            $("#email").html(data.email);
+            $("#phone").html(data.mobileNO);
+            $("#address").html(data.billingAddress);
+            $("#viewModal").modal('show');
+        })
+    }
+    function viewPhgrapher(id){
+        $(".modal-title").html('Photographer Details');
+        $("#dp").attr('src', 'public/loader.gif');
+        $.get('ph-subscriber/'+id, function(res){
+            console.log(res);
+            let data = res[0]
+            let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
+            let img = url.replace("public", "static");
+            $("#dp").attr('src', img);
+            $("#name").html(data.fullname);
+            $("#email").html(data.email);
+            $("#phone").html(data.mobileNO);
+            $("#address").html(data.billingAddress);
+            $("#viewModal").modal('show');
+        })
+    }
+</script>
 @endsection

@@ -3,6 +3,7 @@
 <style type="text/css">
   .label-pending {
     background-color: #c49f47;
+    cursor: pointer;
   }
   .label-success {
     background-color: #36c6d3;
@@ -14,7 +15,7 @@
     padding: 3px 6px;
     color: #fff;
   }
-  img{
+  td img{
     height: auto;
     width: 50px;
   }
@@ -100,7 +101,7 @@
                    <tr>
                     <td>{{date('F jS, Y', strtotime($subscriber->updated_at))}}</td>
                     <td>
-                      <img src="{{$subscriber->photo[0]}}">
+                      <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $subscriber->photo[0])}}">
                     </td>
                      <td>{{$subscriber->fullname}}</td>
                      <td>{{$subscriber->email}}</td>
@@ -193,8 +194,8 @@
         $.get('status-subscriber/'+id, function(data){
           if(data == 'status changed'){
             Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
+              'Changed!',
+              'User status has been changed.',
               'success'
             );
             location.reload();
@@ -216,7 +217,8 @@
       method: "POST",
       data: {id: id, fname: fname, email: email, phone: phone, address: address},
       success: function (data) {
-        location.reload();
+        console.log(data);
+        // location.reload();
       },
       error: function (data) {
           console.log('Error:', data);

@@ -9,11 +9,11 @@ class dashCtrl extends Controller
 {
     public function index()
     {
-        // if(Session::exists('userid')){
+        if(Session::exists('userid')){
             return view('index');
-        // }else{
-    	   // return redirect()->to('login');
-        // }
+        }else{
+    	   return redirect()->to('login');
+        }
     }
     
 }
