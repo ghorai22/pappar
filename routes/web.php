@@ -25,6 +25,7 @@ Route::get('ph-subscriber/{id}', 'photographerCtrl@single');
 
 //Add Photographer
 Route::post('step-one', 'photographerCtrl@stepOne');
+Route::post('step-two', 'photographerCtrl@stepTwo');
 Route::post('upload-img', 'photographerCtrl@upload');
 
 Route::get('delete-ph/{id}', 'photographerCtrl@delete');

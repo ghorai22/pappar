@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" name="csrf" id="csrf" value="{{ csrf_token() }}">
+
 <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
     <div class="row">
         <div class="col-xl-12">
@@ -46,7 +46,7 @@
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-              <div class=""><form method="POST" id="startForm">
+              <div class=""><form method="POST" id="stepOneForm">
                 <div class="row">
                   <div class="col-md-4">
                     <label>Full Name</label>
@@ -86,7 +86,9 @@
               </div>
             </div>
             <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
-              <div class="">
+              <div class=""><form method="POST" id="stepTwoForm">
+                <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token() }}">
+                <input type="hidden" name="id" id="phId">
                 <div class="row">
                   <div class="col-md-4">
                     <label>Type</label>
@@ -127,71 +129,71 @@
                   <div class="col-md-3">
                     <label>Lighting Option</label>
                     <select name="lightingOption" id="lo" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Green Screens</label>
                     <select name="greenScreens" id="gs" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Post Shoot Retouching Editing</label>
                     <select name="postShoot_retouching_editing" id="psre" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Virtual Reality Shoot</label>
                     <select name="virtualReality_shoot" id="vrs" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Drone Aerial Shoot</label>
                     <select name="droneAerial_shoot" id="das" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Animation Creation</label>
                     <select name="animationCreation" id="ac" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Music</label>
                     <select name="music" id="music" class="form-control">
+                      <option value="No">No</option>
                         <option value="Yes">Yes</option>
-                        <option value="No">No</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Voice Over</label>
                     <select name="voiceOver" id="vo" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Sound Effect</label>
                     <select name="soundEffect" id="se" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Special Effects Filter</label>
                     <select name="specialEffects_filter" id="sef" class="form-control">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
                     </select>
                   </div>
                 </div>
@@ -199,10 +201,10 @@
                 <div class="row">
                   <div class="col-md-11" style="text-align: right;">
                     <a href="#!" class="btn btn-primary nxt-btn" onclick="next('profile-tab');">&nbsp;&nbsp;&nbsp;Previus&nbsp;&nbsp;&nbsp;</a>
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('payment-tab');">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepTwo();">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
                   </div>
                 </div>
-              </div>
+              </div></form>
             </div>
             <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
               <div class="">
@@ -293,8 +295,9 @@
       beforeSend: function(){
         loader('Please wait..');
       },
-      success: function (data) {
-        console.log(data);
+      success: function (res) {
+        console.log(res);
+        $("#phId").val(res.data._id);
         $("#details-tab").click();
         Swal.close();
       },
@@ -302,8 +305,7 @@
         console.log('Error:', data);
         errPop(data.responseJSON.message);
       }
-    });
-    
+    });   
   }
 
   function stepOne(){
@@ -311,7 +313,7 @@
     let file = $("#dp").val();
     if (file != "") {
       var file_data = $('#dp').prop('files')[0];
-      var form_data = new FormData($('#startForm')[0]);
+      var form_data = new FormData($('#stepOneForm')[0]);
       form_data.append('file', file_data);
       $.ajax({
         headers: {'X-CSRF-TOKEN': csrf },
@@ -341,6 +343,31 @@
     }else{
       insertData('profilepic/default.png');
     }
+  }
+  function stepTwo(){
+    let csrf = $("#csrf").val();
+    let id = $("#phId").val();
+    let frmData = new FormData($("#stepTwoForm")[0]);
+    $.ajax({
+      headers: {'X-CSRF-TOKEN': csrf },
+      url: "step-two",
+      method: "POST",
+      data: frmData,
+      contentType: false,
+      processData: false,
+      beforeSend: function(){
+        loader('Please wait..');
+      },
+      success: function (data) {
+        console.log(data);
+        // $("#details-tab").click();
+        Swal.close();
+      },
+      error: function (data) {
+        console.log('Error:', data);
+        errPop(data.responseJSON.message);
+      }
+    });
   }
   function loader(msg){
     Swal.fire({
