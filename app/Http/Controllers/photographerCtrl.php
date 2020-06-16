@@ -83,7 +83,7 @@ class photographerCtrl extends Controller
     		'photo' => $request->dp
     	];
     	$response = $client->post($url, [
-			'headers' => ['auth' => $token],
+			'headers' => ['Content-Type' => 'application/json'],
 			'body' => json_encode($data)
 		]);
 		if($response->getStatusCode() == 200){
@@ -93,6 +93,39 @@ class photographerCtrl extends Controller
 			$res = (object)['status' => 'error'];
 			return Response::json($res);
 		}
+    }
+    public function stepTwo(Request $request)
+    {
+        $token = Session::get('token');
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/update?id='.$request->id;
+        $data = (object)[
+            'type' => $request->type,
+            'expertise' => $request->expertise,
+            'equipmentLevel' => $request->equipmentLevel,
+            'amountOfService' => $request->amountOfService,
+            'currencyOfService' => $request->currencyOfService,
+            'languageSpoken' => $request->languageSpoken,
+            'lightingOption' => $request->lightingOption,
+            'greenScreens' => $request->greenScreens,
+            'postShoot_retouching_editing' => $request->postShoot_retouching_editing,
+            'virtualReality_shoot' => $request->virtualReality_shoot,
+            'droneAerial_shoot' => $request->droneAerial_shoot,
+            'animationCreation' => $request->animationCreation,
+            'music' => $request->music,
+            'voiceOver' => $request->voiceOver,
+            'soundEffect' => $request->soundEffect,
+            'specialEffects_filter' => $request->specialEffects_filter
+        ];
+
+        $response = $client->put($url, [
+            'headers' => ['auth' => $token],
+            'body' => json_encode($data)
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            return Response::json($res);
+        }
     }
     public function upload(Request $request)
     {
