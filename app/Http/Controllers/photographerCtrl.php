@@ -159,28 +159,38 @@ class photographerCtrl extends Controller
 			}
         }
     }
-    public function update(Request $request)
+    public function stepFour(Request $request)
     {
     	$token = Session::get('token');
-    	$client = new \GuzzleHttp\Client();
-    	$url = 'https://api.paparazzme.blazingtrail.in/v1/update?id='.$request->id;
-    	$data = (object)[
-    		'fullname' => $request->fname,
-    		'email' => $request->email,
-    		'mobileNo' => $request->phone,
-    		'billingAddress' => $request->address
-    	];
-		$response = $client->put($url, [
-			'headers' => ['auth' => $token],
-			'body' => json_encode($data)
-		]);
-		if($response->getStatusCode() == 200){
-			$res = json_decode($response->getBody()->getContents());
-			echo "<pre>";
-			print_r($res);
-			die();
-			return Response::json($res);
-		}
+        $images = $request->file('portfolio');
+        $noRow = $request->row;
+        $time = date('ymdHis');
+        $img = $images[$noRow];
+        $name = $time.$noRow.".".$img->clientExtension();
+        $path = public_path().'\upload\\';
+        $img->move($path, $name);
+
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/admin/upload-multiple/';
+
+        $response = $client->post($url, [
+            'headers' => ['auth' => $token],
+            'multipart' => [
+                [
+                    'name'     => 'upload_file',
+                    'contents' => file_get_contents($path . $name),
+                    'filename' => $name
+                ],
+                [
+                    'name' => 'pgrapherid',
+                    'contents' => $request->id
+                ]
+            ],
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            return Response::json($res);
+        }
     }
     public function delete($id)
     {

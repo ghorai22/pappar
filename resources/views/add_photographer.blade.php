@@ -243,30 +243,21 @@
               </div>
             </div>
             <div class="tab-pane fade" id="portfolio" role="tabpanel" aria-labelledby="portfolio-tab">
-              <div class="">
+              <div class=""><form method="POST" id="portfolioForm">
+                <input type="hidden" name="csrf" id="csrf2" value="{{ csrf_token() }}">
+                <input type="hidden" name="id" id="phgId">
                 <div class="row">
                   <div class="col-md-7"></div>
                   <div class="col-md-3">
-                    <input type="file" name="" class="form-control-file">
+                    <input type="file" name="portfolio[]" class="form-control-file" id="files" multiple>
                   </div>
                   <div class="col-md-2">
-                    <a href="#!" class="btn btn-info" id="addBtn">Upload</a>
+                    <a href="#!" class="btn btn-info" id="addBtn" onclick="stepFour();">Upload</a>
                   </div>
-                </div>
+                </div></form>
                 <br>
-                <div class="row">
-                  <div class="col-md-4">
-                    <img src="https://i.pinimg.com/474x/73/90/d4/7390d4f07ea6ad287185df4ea789621f.jpg" class="portfolio-img">
-                  </div>
-                  <div class="col-md-4">
-                    <img src="https://i.pinimg.com/474x/73/90/d4/7390d4f07ea6ad287185df4ea789621f.jpg" class="portfolio-img">
-                  </div>
-                  <div class="col-md-4">
-                    <img src="https://i.pinimg.com/474x/73/90/d4/7390d4f07ea6ad287185df4ea789621f.jpg" class="portfolio-img">
-                  </div>
-                  <div class="col-md-4">
-                    <img src="https://i.pinimg.com/474x/73/90/d4/7390d4f07ea6ad287185df4ea789621f.jpg" class="portfolio-img">
-                  </div>
+                <div class="row" id="portfolioView">
+                  
                 </div>
               </div>
             </div>
@@ -298,6 +289,7 @@
       success: function (res) {
         console.log(res);
         $("#phId").val(res.data._id);
+        $("#phgId").val(res.data._id);
         $("#details-tab").click();
         Swal.close();
       },
@@ -347,27 +339,76 @@
   function stepTwo(){
     let csrf = $("#csrf").val();
     let id = $("#phId").val();
-    let frmData = new FormData($("#stepTwoForm")[0]);
-    $.ajax({
-      headers: {'X-CSRF-TOKEN': csrf },
-      url: "step-two",
-      method: "POST",
-      data: frmData,
-      contentType: false,
-      processData: false,
-      beforeSend: function(){
-        loader('Please wait..');
-      },
-      success: function (data) {
-        console.log(data);
-        $("#portfolio-tab").click();
+    if(id != ""){
+      let frmData = new FormData($("#stepTwoForm")[0]);
+      $.ajax({
+        headers: {'X-CSRF-TOKEN': csrf },
+        url: "step-two",
+        method: "POST",
+        data: frmData,
+        contentType: false,
+        processData: false,
+        beforeSend: function(){
+          loader('Please wait..');
+        },
+        success: function (data) {
+          console.log(data);
+          $("#portfolio-tab").click();
+          Swal.close();
+        },
+        error: function (data) {
+          console.log('Error:', data);
+          errPop(data.responseJSON.message);
+        }
+      });
+    }else{
+      $("#profile-tab").click();
+    }
+  }
+  function stepFour(){
+    let csrf = $("#csrf2").val();
+    let id = $("#phgId").val();
+    if(id != ""){
+      let frmData = new FormData($("#portfolioForm")[0]);
+      let fi = document.getElementById('files');
+      let nof = fi.files.length;
+      if(nof > 0){
+        for(let j= 0; j < nof; j++){
+          frmData.append('row', j);
+          $.ajax({
+            headers: {'X-CSRF-TOKEN': csrf },
+            url: "step-four",
+            method: "POST",
+            data: frmData,
+            contentType: false,
+            processData: false,
+            beforeSend: function(){
+              loader('Uploading..');
+              $("#swal2-content").show();
+              $("#swal2-content").html("0 upload of "+nof);
+            },
+            success: function (data) {
+              console.log(data);
+              let nou = j + 1;
+              $("#swal2-content").html(nou+" upload of "+nof);
+              let url = 'https://api.paparazzme.blazingtrail.in/'+data.file;
+              let html = '<div class="col-md-4"><img src="'+url.replace("public", "static")+'" class="portfolio-img"></div>';
+              $("#portfolioView").append(html);
+            },
+            error: function (data) {
+              console.log('Error:', data);
+              errPop(data.responseJSON.message);
+            }
+          });
+        };
+        $("#files").val("");
         Swal.close();
-      },
-      error: function (data) {
-        console.log('Error:', data);
-        errPop(data.responseJSON.message);
+      }else{
+        errPop('Please select file');
       }
-    });
+    }else{
+      $("#profile-tab").click();
+    }
   }
   function loader(msg){
     Swal.fire({
