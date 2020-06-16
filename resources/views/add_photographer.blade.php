@@ -360,7 +360,7 @@
       },
       success: function (data) {
         console.log(data);
-        // $("#details-tab").click();
+        $("#portfolio-tab").click();
         Swal.close();
       },
       error: function (data) {

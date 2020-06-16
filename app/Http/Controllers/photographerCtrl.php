@@ -119,7 +119,7 @@ class photographerCtrl extends Controller
         ];
 
         $response = $client->put($url, [
-            'headers' => ['auth' => $token],
+            'headers' => ['Content-Type' => 'application/json', 'auth' => $token],
             'body' => json_encode($data)
         ]);
         if($response->getStatusCode() == 200){
