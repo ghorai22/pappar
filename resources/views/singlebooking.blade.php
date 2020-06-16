@@ -44,7 +44,7 @@
             <label for="">Location lang: <b> @if(!empty($photographers[0][0]->currentlang_lat[1])) {{ $photographers[0][0]->currentlang_lat[1] }} @endif</b></label>
         </div>
         <div class="col-xl-12">
-            <label for="">Date Time: </label>
+            <label for="">Date Time: <b>{{date('F jS, Y', strtotime($photographers[0][0]->update_at))}}</b></label>
         </div>
         <div class="col-xl-12">
             <label for="">Status: 
@@ -82,7 +82,7 @@
             <label for="">Videos: </label>
         </div>
         <div class="col-xl-12">
-            <label for="">Dated: </label>
+            <label for="">Dated: <b>{{date('F jS, Y', strtotime($photographers[0][0]->update_at))}}</b></label>
         </div>
     </div>
 </div>
