@@ -14,6 +14,11 @@
     background-color: #17a2b8;
     border-color: #17a2b8;
 }
+.change-dp{
+  background: #000;
+  padding: 10px;
+  text-align: center;
+}
 </style>
 <!-- The Modal -->
 
@@ -47,40 +52,54 @@
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
               <div class=""><form method="POST" id="stepOneForm">
+                <input type="hidden" name="csrf" id="csrf1" value="{{ csrf_token() }}">
+                <input type="hidden" name="id" id="phId1" value="{{$phgrapher->_id}}">
                 <div class="row">
-                  <div class="col-md-4">
-                    <label>Full Name</label>
-                    <input type="text" name="name" id="fullname" class="form-control">
+                  <div class="col-md-3">
+                     @if(isset($phgrapher->photo) && !empty($phgrapher->photo))
+                     <span id="imgView">
+                      <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $phgrapher->photo[0])}}" style="height: auto; width: 100%;">
+                      <a href="#!" id="change"><h5 class="change-dp"><i class="fa fa-pencil" aria-hidden="true"></i> Change DP</h5></a>
+                    </span>
+                    @endif
+                    <div id="imgEdit" style="display: none;">
+                      <label>Profile Picture</label>
+                      <input type="file" name="dp" id="dp" class="form-control-file" accept="image/*">
+                    </div>
                   </div>
-                  <div class="col-md-4">
-                    <label>Email</label>
-                    <input type="text" name="email" id="email" class="form-control">
-                  </div>
-                  <div class="col-md-4">
-                    <label>Phone</label>
-                    <input type="text" name="phone" id="phone" class="form-control">
-                  </div>
-                  <div class="col-md-6">
-                    <label>Age</label>
-                    <input type="text" name="age" id="age" class="form-control">
-                  </div>
-                  <div class="col-md-6">
-                    <label>Profile Picture</label>
-                    <input type="file" name="dp" id="dp" class="form-control-file" accept="image/*">
-                  </div>
-                  <div class="col-md-6">
-                    <label>Brief Bio</label>
-                    <textarea class="form-control" name="bio" id="bb" rows="3"></textarea>
-                  </div>
-                  <div class="col-md-6">
-                    <label>Address</label>
-                    <textarea class="form-control" name="address" id="address" rows="3"></textarea>
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <label>Full Name</label>
+                        <input type="text" name="name" id="fullname" class="form-control" value="{{$phgrapher->fullname}}">
+                      </div>
+                      <div class="col-md-6">
+                        <label>Email</label>
+                        <input type="text" name="email" id="email" class="form-control" value="{{$phgrapher->email}}">
+                      </div>
+                      <div class="col-md-6">
+                        <label>Phone</label>
+                        <input type="text" name="phone" id="phone" class="form-control" value="{{$phgrapher->mobileNO}}">
+                      </div>
+                      <div class="col-md-6">
+                        <label>Age</label>
+                        <input type="text" name="age" id="age" class="form-control" value="{{$phgrapher->pinfo[0]->age}}">
+                      </div>
+                      <div class="col-md-6">
+                        <label>Brief Bio</label>
+                        <textarea class="form-control" name="bio" id="bb" rows="3">{{$phgrapher->pinfo[0]->briefBio}}</textarea>
+                      </div>
+                      <div class="col-md-6">
+                        <label>Address</label>
+                        <textarea class="form-control" name="address" id="address" rows="3">{{$phgrapher->billingAddress}}</textarea>
+                      </div>
+                    </div>
                   </div>
                 </div></form>
                 <br>
                 <div class="row">
                   <div class="col-md-11" style="text-align: right;">
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepOne();">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepOne();">Update & Next</a>
                   </div>
                 </div>
               </div>
@@ -88,112 +107,203 @@
             <div class="tab-pane fade" id="details" role="tabpanel" aria-labelledby="details-tab">
               <div class=""><form method="POST" id="stepTwoForm">
                 <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token() }}">
-                <input type="hidden" name="id" id="phId">
+                <input type="hidden" name="id" id="phId" value="{{$phgrapher->_id}}">
+                @php
+                $phinfo = $phgrapher->pinfo[0];
+                @endphp
                 <div class="row">
                   <div class="col-md-4">
                     <label>Type</label>
                     <select name="type" id="type" class="form-control">
+                      @if($phinfo->type[0] == 'Photographer')
                       <option value="Photographer">Photographer</option>
                       <option value="Videographer">Videographer</option>
+                      @else
+                      <option value="Videographer">Videographer</option>
+                      <option value="Photographer">Photographer</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-4">
                     <label>Experties</label>
                       <select name="expertise" id="expertise" class="form-control">
+                        @if(isset($phinfo->expertise) && $phinfo->expertise == 'mobile')
                         <option value="mobile">Mobile</option>
                         <option value="amateur">Amateur</option>
                         <option value="semi-pro">Semi Pro</option>
                         <option value="pro">Pro</option>
+                        @elseif(isset($phinfo->expertise) && $phinfo->expertise == 'amateur')
+                        <option value="amateur">Amateur</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="semi-pro">Semi Pro</option>
+                        <option value="pro">Pro</option>
+                        @elseif(isset($phinfo->expertise) && $phinfo->expertise == 'semi-pro')
+                        <option value="semi-pro">Semi Pro</option>
+                        <option value="amateur">Amateur</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="pro">Pro</option>
+                        @else
+                        <option value="pro">Pro</option>
+                        <option value="semi-pro">Semi Pro</option>
+                        <option value="amateur">Amateur</option>
+                        <option value="mobile">Mobile</option>
+                        @endif
                     </select>
                   </div>
                   <div class="col-md-4">
                     <label>Equipment Level</label>
                     <select name="equipmentLevel" id="el" class="form-control">
+                      @if(isset($phinfo->equipmentLevel) && $phinfo->equipmentLevel == 'DSLR')
                         <option value="DSLR">DSLR</option>
                         <option value="Mobile camera">Mobile Camera</option>
                         <option value="360 degree camera">360 Degree Camera</option>
+                      @elseif(isset($phinfo->equipmentLevel) && $phinfo->equipmentLevel == 'Mobile camera')
+                        <option value="Mobile camera">Mobile Camera</option>
+                        <option value="DSLR">DSLR</option>
+                        <option value="360 degree camera">360 Degree Camera</option>
+                      @else
+                        <option value="360 degree camera">360 Degree Camera</option>
+                        <option value="Mobile camera">Mobile Camera</option>
+                        <option value="DSLR">DSLR</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Amount Of Service</label>
-                    <input type="text" name="amountOfService" id="aos" class="form-control">
+                    <input type="text" name="amountOfService" id="aos" class="form-control" value="{{$phinfo->amountOfService}}">
                   </div>
                   <div class="col-md-3">
                     <label>Currency Of Service</label>
-                    <input type="text" name="currencyOfService" id="aos" class="form-control">
+                    <input type="text" name="currencyOfService" id="aos" class="form-control" value="{{$phinfo->currencyOfService}}">
                   </div>
                   <div class="col-md-6">
                     <label>Language Spoken</label>
+                    @if(isset($phinfo->languageSpoken) && gettype($phinfo->languageSpoken) == 'array' && count($phinfo->languageSpoken) > 0)
+                    <input type="text" name="languageSpoken" id="ls" class="form-control" value="{{$phinfo->languageSpoken[0]}}">
+                    @elseif(gettype($phinfo->languageSpoken) != 'array')
+                    <input type="text" name="languageSpoken" id="ls" class="form-control" value="{{$phinfo->languageSpoken}}">
+                    @else
                     <input type="text" name="languageSpoken" id="ls" class="form-control">
+                    @endif
                   </div>
                   <div class="col-md-3">
                     <label>Lighting Option</label>
                     <select name="lightingOption" id="lo" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->lightingOption == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Green Screens</label>
                     <select name="greenScreens" id="gs" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->greenScreens == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Post Shoot Retouching Editing</label>
                     <select name="postShoot_retouching_editing" id="psre" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->postShoot_retouching_editing == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Virtual Reality Shoot</label>
                     <select name="virtualReality_shoot" id="vrs" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->virtualReality_shoot == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Drone Aerial Shoot</label>
                     <select name="droneAerial_shoot" id="das" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->droneAerial_shoot == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Animation Creation</label>
                     <select name="animationCreation" id="ac" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->animationCreation == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Music</label>
                     <select name="music" id="music" class="form-control">
-                      <option value="No">No</option>
+                      @if($phinfo->music == 'Yes')
                         <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Voice Over</label>
                     <select name="voiceOver" id="vo" class="form-control">
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
+                      @if($phinfo->voiceOver == 'Yes')
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Sound Effect</label>
                     <select name="soundEffect" id="se" class="form-control">
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
+                      @if($phinfo->soundEffect == 'Yes')
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                   <div class="col-md-3">
                     <label>Special Effects Filter</label>
                     <select name="specialEffects_filter" id="sef" class="form-control">
-                      <option value="No">No</option>
-                      <option value="Yes">Yes</option>
+                      @if($phinfo->specialEffects_filter == 'Yes')
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      @else
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                      @endif
                     </select>
                   </div>
                 </div>
@@ -201,7 +311,7 @@
                 <div class="row">
                   <div class="col-md-11" style="text-align: right;">
                     <a href="#!" class="btn btn-primary nxt-btn" onclick="next('profile-tab');">&nbsp;&nbsp;&nbsp;Previus&nbsp;&nbsp;&nbsp;</a>
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepTwo();">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepTwo();">Update & Next</a>
                   </div>
                 </div>
               </div></form>
@@ -237,7 +347,7 @@
                 <div class="row">
                   <div class="col-md-11" style="text-align: right;">
                     <a href="#!" class="btn btn-primary nxt-btn" onclick="next('details-tab');">&nbsp;&nbsp;&nbsp;Previus&nbsp;&nbsp;&nbsp;</a>
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('portfolio-tab');">&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('portfolio-tab');">Update & Next</a>
                   </div>
                 </div>
               </div>
@@ -245,7 +355,7 @@
             <div class="tab-pane fade" id="portfolio" role="tabpanel" aria-labelledby="portfolio-tab">
               <div class=""><form method="POST" id="portfolioForm">
                 <input type="hidden" name="csrf" id="csrf2" value="{{ csrf_token() }}">
-                <input type="hidden" name="id" id="phgId">
+                <input type="hidden" name="id" id="phgId" value="{{$phgrapher->_id}}">
                 <div class="row">
                   <div class="col-md-7"></div>
                   <div class="col-md-3">
@@ -275,8 +385,13 @@
   function next(id) {
     $("#"+id).click();
   }
+  $("#change").click(function(){
+    $("#imgView").hide();
+    $("#imgEdit").show();
+  })
   function insertData(dp) {
-    let csrf = $("#csrf").val();
+    let csrf = $("#csrf1").val();
+    let id = $("#phId1").val();
     let name = $("#fullname").val();
     let email = $("#email").val();
     let phone = $("#phone").val();
@@ -286,16 +401,14 @@
 
     $.ajax({
       headers: {'X-CSRF-TOKEN': csrf },
-      url: "{{url('step-one')}}",
+      url: "{{url('step-one-update')}}",
       method: "POST",
-      data: {name: name, email: email, phone: phone, age: age, bio: bio, address: address, dp: dp},
+      data: {id: id, name: name, email: email, phone: phone, age: age, bio: bio, address: address, dp: dp},
       beforeSend: function(){
         loader('Please wait..');
       },
       success: function (res) {
         console.log(res);
-        $("#phId").val(res.data._id);
-        $("#phgId").val(res.data._id);
         $("#details-tab").click();
         Swal.close();
       },
@@ -305,13 +418,14 @@
       }
     });   
   }
+
   function stepOne(){
-    let csrf = $("#csrf").val();
+    let csrf = $("#csrf1").val();
     let file = $("#dp").val();
     if (file != "") {
       var file_data = $('#dp').prop('files')[0];
       var form_data = new FormData($('#stepOneForm')[0]);
-      form_data.append('dp', file_data);
+      form_data.append('file', file_data);
       $.ajax({
         headers: {'X-CSRF-TOKEN': csrf },
         url: "{{url('upload-img')}}",
@@ -338,7 +452,7 @@
         }
       });
     }else{
-      insertData('profilepic/default.png');
+      insertData('no-change');
     }
   }
   function stepTwo(){
@@ -351,9 +465,8 @@
         url: "{{url('step-two')}}",
         method: "POST",
         data: frmData,
-        dataType: "json",
-        processData: false,
         contentType: false,
+        processData: false,
         beforeSend: function(){
           loader('Please wait..');
         },
@@ -383,11 +496,9 @@
           frmData.append('row', j);
           $.ajax({
             headers: {'X-CSRF-TOKEN': csrf },
-            url: "{{url('step-four')}",
+            url: "{{url('step-four')}}",
             method: "POST",
             data: frmData,
-            contentType: false,
-            processData: false,
             beforeSend: function(){
               loader('Uploading..');
               $("#swal2-content").show();

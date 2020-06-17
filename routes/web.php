@@ -21,11 +21,14 @@ Route::get('logout', 'loginCtrl@logout');
 
 Route::get('photographer', 'photographerCtrl@index');
 Route::get('photographer-add', 'photographerCtrl@add');
+Route::get('photographer-edit/{id}', 'photographerCtrl@edit');
 Route::get('ph-subscriber/{id}', 'photographerCtrl@single');
 
-//Add Photographer
+//Add & Edit Photographer
 Route::post('step-one', 'photographerCtrl@stepOne');
+Route::post('step-one-update', 'photographerCtrl@stepOneUpdate');
 Route::post('step-two', 'photographerCtrl@stepTwo');
+Route::post('step-four', 'photographerCtrl@stepFour');
 Route::post('upload-img', 'photographerCtrl@upload');
 
 Route::get('delete-ph/{id}', 'photographerCtrl@delete');
@@ -40,3 +43,9 @@ Route::get('status-subscriber/{id}', 'subscriberCtrl@status');
 Route::get('single-booking/{id}', 'bookingCtrl@singleBooking');
 Route::get('booking', 'bookingCtrl@index');
 
+//Admin
+Route::get('users', 'adminCtrl@index');
+Route::post('user-cteate', 'adminCtrl@create');
+Route::get('user-single/{id}', 'adminCtrl@single');
+Route::get('user-status/{id}', 'adminCtrl@status');
+Route::get('user-delete/{id}', 'adminCtrl@delete');

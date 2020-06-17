@@ -58,12 +58,22 @@ class subscriberCtrl extends Controller
     	$token = Session::get('token');
     	$client = new \GuzzleHttp\Client();
     	$url = 'https://api.paparazzme.blazingtrail.in/v1/update?id='.$request->id;
-    	$data = (object)[
-    		'fullname' => $request->fname,
-    		'email' => $request->email,
-    		'mobileNo' => $request->phone,
-    		'billingAddress' => $request->address
-    	];
+    	if($request->dp == 'no-change'){
+	    	$data = (object)[
+	    		'fullname' => $request->fname,
+	    		'email' => $request->email,
+	    		'mobileNo' => $request->phone,
+	    		'billingAddress' => $request->address
+	    	];
+	    }else{
+	    	$data = (object)[
+	    		'fullname' => $request->fname,
+	    		'email' => $request->email,
+	    		'mobileNo' => $request->phone,
+	    		'billingAddress' => $request->address,
+	    		'fullpath' => $request->dp
+	    	];
+	    }
 		$response = $client->put($url, [
 		  'json' => $data,
 		  'headers' => ['auth' => $token]

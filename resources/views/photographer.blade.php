@@ -94,12 +94,12 @@
                     @endif
                     @if(Session::get('loginType') == 'admin')
                      <td>
-                      <a href="#!" onclick="editUser('{{$photographer->_id}}')"><i class="fas fa-pencil-alt"></i></a> |
+                      <a href="{{ url('photographer-edit') }}/{{$photographer->_id}}"><i class="fas fa-pencil-alt"></i></a> |
                       <a href="#!" onclick="deleteUser('{{$photographer->_id}}')"><i class="fa fa-trash"></i></a>
                     </td>
                     @else
                     <td>
-                      <a href="#!" onclick="editUser('{{$photographer->_id}}')"><i class="fas fa-pencil-alt"></i> Edit</a>
+                      <a href="{{ url('photographer-edit') }}/{{$photographer->_id}}"><i class="fas fa-pencil-alt"></i> Edit</a>
                     </td>
                     @endif
                    </tr>
@@ -110,9 +110,12 @@
     </div>
 </div>
 <script type="text/javascript">
-    function editUser(id) {
-        $("#formModal").modal('show');
-    }
+  $(document).ready(function(){
+    $(".kt-menu__item").each(function(){
+      $(this).removeClass('kt-menu__item--active');
+    })
+    $("#photographer").addClass('kt-menu__item--active');
+  })
     function statusChange(id){
         Swal.fire({
           title: 'Are you sure?',

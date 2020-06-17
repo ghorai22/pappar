@@ -80,7 +80,7 @@ class photographerCtrl extends Controller
     		'pwd' => $request->phone,
     		'age' => $request->age,
     		'briefBio' => $request->bio,
-    		'photo' => $request->dp
+    		'fullpath' => $request->dp
     	];
     	$response = $client->post($url, [
 			'headers' => ['Content-Type' => 'application/json'],
@@ -93,6 +93,43 @@ class photographerCtrl extends Controller
 			$res = (object)['status' => 'error'];
 			return Response::json($res);
 		}
+    }
+    public function stepOneUpdate(Request $request)
+    {
+        $token = Session::get('token');
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/update?id='.$request->id;
+
+        if ($request->dp == 'no-change') {
+            $data = (object)[
+                'fullname' => $request->name,
+                'email' => $request->email,
+                'mobileNO' => $request->phone,
+                'billingAddress' => $request->address,
+                'pwd' => $request->phone,
+                'age' => $request->age,
+                'briefBio' => $request->bio
+            ];
+        }else{
+            $data = (object)[
+                'fullname' => $request->name,
+                'email' => $request->email,
+                'mobileNO' => $request->phone,
+                'billingAddress' => $request->address,
+                'pwd' => $request->phone,
+                'age' => $request->age,
+                'briefBio' => $request->bio,
+                'fullpath' => $request->dp
+            ];
+        }
+        $response = $client->put($url, [
+            'headers' => ['Content-Type' => 'application/json', 'auth' => $token],
+            'body' => json_encode($data)
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            return Response::json($res);
+        }
     }
     public function stepTwo(Request $request)
     {
@@ -131,7 +168,8 @@ class photographerCtrl extends Controller
     {
 		$token = Session::get('token');
     	$time = date('ymdHis');
-    	if($request->hasFile('dp'))
+
+    	if($request->hasFile('dp')) 
         {
             $img = $request->file('dp');
 
@@ -157,30 +195,57 @@ class photographerCtrl extends Controller
 				$data = (object)['status' => 'success', 'dp' => $res];
 				return Response::json($data);
 			}
+        }else{
+            $data = (object)['status' => 'error', 'message' => 'file not found'];
+            return Response::json($data);
         }
     }
-    public function update(Request $request)
+    public function stepFour(Request $request)
     {
     	$token = Session::get('token');
-    	$client = new \GuzzleHttp\Client();
-    	$url = 'https://api.paparazzme.blazingtrail.in/v1/update?id='.$request->id;
-    	$data = (object)[
-    		'fullname' => $request->fname,
-    		'email' => $request->email,
-    		'mobileNo' => $request->phone,
-    		'billingAddress' => $request->address
-    	];
-		$response = $client->put($url, [
-			'headers' => ['auth' => $token],
-			'body' => json_encode($data)
-		]);
-		if($response->getStatusCode() == 200){
-			$res = json_decode($response->getBody()->getContents());
-			echo "<pre>";
-			print_r($res);
-			die();
-			return Response::json($res);
-		}
+        $images = $request->file('portfolio');
+        $noRow = $request->row;
+        $time = date('ymdHis');
+        $img = $images[$noRow];
+        $name = $time.$noRow.".".$img->clientExtension();
+        $path = public_path().'\upload\\';
+        $img->move($path, $name);
+
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/admin/upload-multiple/';
+
+        $response = $client->post($url, [
+            'headers' => ['auth' => $token],
+            'multipart' => [
+                [
+                    'name'     => 'upload_file',
+                    'contents' => file_get_contents($path . $name),
+                    'filename' => $name
+                ],
+                [
+                    'name' => 'pgrapherid',
+                    'contents' => $request->id
+                ]
+            ],
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            return Response::json($res);
+        }
+    }
+    public function edit($id)
+    {
+        $token = Session::get('token');
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/getOne?id='.$id;
+        $response = $client->get($url, [
+            'headers' => ['auth' => $token]
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            $data['phgrapher'] = $res[0];
+            return view('edit_photographer', $data);
+        }
     }
     public function delete($id)
     {
