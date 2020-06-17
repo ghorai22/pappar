@@ -116,7 +116,7 @@
                                     </svg></span><span class="kt-menu__link-text">Dashboard</span></a>
                                 </li>
                                 @if(Session::get('loginType') != 'user')
-                                <li class="kt-menu__item" aria-haspopup="true">
+                                <li class="kt-menu__item" aria-haspopup="true" id="photographer">
                                     <a href="{{ url('photographer') }}" class="kt-menu__link ">
                                         <span class="kt-menu__link-icon">
                                             <i class="fa fa-camera" aria-hidden="true"></i>
@@ -126,11 +126,15 @@
                                 </li>
                                 @endif
                                 @if(Session::get('loginType') != 'photographer')
-                                <li class="kt-menu__item" aria-haspopup="true"><a href="{{ url('subscribers') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-users" aria-hidden="true"></i></span><span class="kt-menu__link-text">Subscribers</span></a>
+                                <li class="kt-menu__item" aria-haspopup="true" id="subscriber"><a href="{{ url('subscribers') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-users" aria-hidden="true"></i></span><span class="kt-menu__link-text">Subscribers</span></a>
                                 </li>
                                 @endif
-                                <li class="kt-menu__item" aria-haspopup="true"><a href="{{ url('booking') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-calendar" aria-hidden="true"></i></span><span class="kt-menu__link-text">Booking</span></a>
+                                <li class="kt-menu__item" aria-haspopup="true" id="booking"><a href="{{ url('booking') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-calendar" aria-hidden="true"></i></span><span class="kt-menu__link-text">Booking</span></a>
                                 </li>
+                                @if(Session::get('loginType') == 'admin')
+                                <li class="kt-menu__item" aria-haspopup="true" id="users"><a href="{{ url('users') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-user-secret" aria-hidden="true"></i></span><span class="kt-menu__link-text">Admin</span></a>
+                                </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -192,12 +196,6 @@
             </div>
         </div>
         <script>
-            $(".kt-menu__item").click(function(){
-                $(".kt-menu__item").each(function(){
-                    $(this).removeClass('kt-menu__item--active');
-                })
-                $(this).addClass('kt-menu__item--active');
-            })
             var KTAppOptions = {
                 "colors": {
                     "state": {

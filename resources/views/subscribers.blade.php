@@ -19,6 +19,11 @@
     height: auto;
     width: 50px;
   }
+  .change-dp{
+    background: #000;
+    padding: 10px;
+    text-align: center;
+  }
 </style>
 <!-- The Modal -->
 <div class="modal show" id="formModal" aria-modal="true">
@@ -33,12 +38,19 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        <form id="userForm" method="post" enctype="multipart/form-data">
+        <form id="userForm" method="POST" id="updateForm">
           <input type="hidden" name="_token" value="{{ csrf_token() }}" id="csrf">
           <input type="hidden" name="id" id="userId">
           <div class="row">
             <div class="col-md-3">
-              <h6>Details</h6>
+              <span id="imgView">
+                <img src="public/loader.gif" id="photo" style="height: auto; width: 100%;">
+                <a href="#!" id="change"><h5 class="change-dp"><i class="fa fa-pencil" aria-hidden="true"></i> Change DP</h5></a>
+              </span>
+              <span id="imgEdit" style="display: none;">
+                <label>Profile Picture</label>
+                <input type="file" name="dp" id="dp" class="form-control-file" accept="image/*">
+              </span>
             </div>
             <div class="col-md-9" id="abc">
               <div class="row">
@@ -148,9 +160,22 @@
     </div>
 </div>
 <script type="text/javascript">
+  $(document).ready(function(){
+    $(".kt-menu__item").each(function(){
+      $(this).removeClass('kt-menu__item--active');
+    })
+    $("#subscriber").addClass('kt-menu__item--active');
+  })
   function editUser(id) {
     $.get('single-subscriber/'+id, function(data){
       $("#userId").val(data._id);
+      if(data.photo.length > 0 && data.photo[0] != 'N/A'){
+        let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
+        $("#photo").attr('src', url.replace("public", "static"));
+      }else{
+        $("#imgView").hide();
+        $("#imgEdit").show();
+      }
       $("#fullname").val(data.fullname);
       $("#email").val(data.email);
       $("#phone").val(data.mobileNO);
@@ -158,6 +183,10 @@
       $("#formModal").modal('show');
     })
   }
+  $("#change").click(function(){
+    $("#imgView").hide();
+    $("#imgEdit").show();
+  })
   function deleteUser(id){
     Swal.fire({
       title: 'Are you sure?',
@@ -205,6 +234,14 @@
     })
   }
   $("#submitBtn").click(function(){
+    let file = $("#dp").val();
+    if (file == "") {
+      updateData('no-change');
+    }else{
+      uploadFile();
+    }
+  })
+  function updateData(dp){
     let csrf = $("#csrf").val();
     let id = $("#userId").val();
     let fname = $("#fullname").val();
@@ -215,15 +252,65 @@
       headers: {'X-CSRF-TOKEN': csrf },
       url: "update-subscriber",
       method: "POST",
-      data: {id: id, fname: fname, email: email, phone: phone, address: address},
+      data: {id: id, fname: fname, email: email, phone: phone, address: address, dp: dp},
       success: function (data) {
         console.log(data);
-        // location.reload();
+        location.reload();
       },
       error: function (data) {
           console.log('Error:', data);
       }
     });
-  })
+  }
+  function uploadFile(){
+    let csrf = $("#csrf").val();
+    var file_data = $('#dp').prop('files')[0];
+    var form_data = new FormData($('#updateForm')[0]);
+    form_data.append('dp', file_data);
+    $.ajax({
+      headers: {'X-CSRF-TOKEN': csrf },
+      url: "{{url('upload-img')}}",
+      method: "POST",
+      data: form_data,
+      dataType: "json",
+      processData: false,
+      contentType: false,
+      beforeSend: function(){
+        loader('Uploading..');
+      },
+      success: function (data) {
+        console.log(data);
+        if(data.status == 'success'){
+          updateData(data.dp);
+          Swal.close();
+        }else{
+          errPop(data.message);
+        }
+      },
+      error: function (data) {
+        console.log('Error:', data);
+        Swal.close();
+      }
+    });
+  }
+  function loader(msg){
+    Swal.fire({
+      title: msg,
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      background: '#fff',
+      showConfirmButton: false,
+      onOpen: ()=>{
+          Swal.showLoading();
+      }
+    });
+  }
+  function errPop(msg){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: msg
+    })
+  }
 </script>
 @endsection
