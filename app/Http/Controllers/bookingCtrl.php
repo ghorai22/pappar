@@ -64,8 +64,7 @@ class bookingCtrl extends Controller
 		]);
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
-			$result[0] = $res;
-			$data['photographers'] = $result;
+			$data['photographers'] = $res;
 			return view('singlebooking', $data);
 		}
 	}
