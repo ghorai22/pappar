@@ -30,19 +30,20 @@ class loginCtrl extends Controller
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
 			$result = $res->resdata;
-            // echo "<pre>";
-            // print_r($result->loginType);
-            // die();
-            // if ($result->loginType == 'admin') {
+
+            if (gettype($result) == 'object') {
     			Session::put('userid', $result->_id);
                 Session::put('name', $result->fullname);
                 Session::put('loginType', $result->loginType);
     			Session::put('token', $res->token);
     			return redirect()->to('/');
-            // }else{
-            //     Session::flash('error', 'Admin access only!');
-            //     return redirect()->back();
-            // }
+            }else{
+                Session::put('userid', $result[0]->_id);
+                Session::put('name', $result[0]->fullname);
+                Session::put('loginType', $result[0]->loginType);
+                Session::put('token', $res->token);
+                return redirect()->to('/');
+            }
 		}else{
 			Session::flash('error', 'Something wrong!');
 			return redirect()->back();
