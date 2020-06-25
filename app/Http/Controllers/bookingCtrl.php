@@ -22,10 +22,7 @@ class bookingCtrl extends Controller
 				if($response->getStatusCode() == 200){
 					$res = json_decode($response->getBody()->getContents());
 					$data['bookings'] = $res;
-					echo "<pre>";
-					print_r($res);
-					die();
-					return view('userbooking', $data);
+					return view('booking', $data);
 				}
 			}else if(Session::get('loginType') == 'photographer'){
 		    	$url = 'https://api.paparazzme.blazingtrail.in/v1/booking/toPgrapher?id='.$id;
@@ -35,7 +32,7 @@ class bookingCtrl extends Controller
 				if($response->getStatusCode() == 200){
 					$res = json_decode($response->getBody()->getContents());
 					$data['bookings'] = $res;
-					return view('pgrapherbooking', $data);
+					return view('booking', $data);
 				}
 			}else{
 				$url = 'https://api.paparazzme.blazingtrail.in/v1/admin/getAllBooking';
