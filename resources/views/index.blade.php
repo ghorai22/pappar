@@ -15,31 +15,68 @@
 	</div>
 </div>
 <script type="text/javascript">
+    var yellow = 'rgba(255, 206, 86, 1)';
+    var blue = 'rgba(54, 162, 235, 1)';
+    var red = 'rgba(255, 99, 132, 1)';
+
 	var ctx0 = document.getElementById('chart-0').getContext('2d');
+    var ph = '{{$photographers}}';
+    var sub = '{{$subscribers}}';
+    var booking = '{{$booking}}';
+    var bookArr = booking.split(",");
+
+    var bookColor = [];
+    for(let i = 0; i < bookArr.length; i++){
+        if(bookArr[i] < 51){
+            bookColor[i] = red;
+        }else if (bookArr[i] < 151) {
+            bookColor[i] = yellow;
+        }else{
+            bookColor[i] = blue;
+        }
+    }
+
+    var d = new Date();
+    var yr = d.getFullYear();
+
 	var myBarChart = new Chart(ctx0, {
         type: 'bar',
         data: {
-                datasets: [{
-                    data: [10, 20, 30, 5, 2, 50, 47, 25, 31, 42, 26, 35],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                    ]
-                }],
-                labels: [
-                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                ]
+            datasets: [{
+                label: 'Booking '+yr,
+                data: bookArr,
+                backgroundColor: bookColor
+            }],
+            labels: [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ]
+        },
+        options: { 
+            legend: {
+                labels: {
+                    fontColor: "#98999A",
+                    fontSize: 18
+                }
             },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: "#98999A",
+                        fontSize: 13,
+                        stepSize: 1,
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "#98999A",
+                        fontSize: 14,
+                        stepSize: 1,
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
     });
 
     var ctx1 = document.getElementById('chart-1').getContext('2d');
@@ -47,17 +84,15 @@
         type: 'pie',
         data: {
                 datasets: [{
-                    data: [10, 20, 30],
+                    data: [ph, sub],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
+                        yellow,
+                        blue,
                     ]
                 }],
                 labels: [
-                    'A',
-                    'B',
-                    'C'
+                    'Photographers',
+                    'Subscribers',
                 ]
             },
     });

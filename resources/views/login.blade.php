@@ -4,7 +4,7 @@
 	<head>
 		<base href="../../../">
 		<meta charset="utf-8" />
-		<title>Metronic | Login Page v3</title>
+		<title>Papparazzme | Login</title>
 		<meta name="description" content="Login page example">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!--begin::Fonts -->
@@ -23,7 +23,7 @@
 		<link href="{{ asset('public/assets/css/skins/brand/dark.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('public/assets/css/skins/aside/dark.css') }}" rel="stylesheet" type="text/css" />
 		<!--end::Layout Skins -->
-		<link rel="shortcut icon" href="{{ asset('public/assets/media/logos/favicon.ico') }}" />
+		<link rel="shortcut icon" href="{{ asset('public/assets/media/logos/favicon.png') }}" />
 	</head>
 	<!-- end::Head -->
 	<!-- begin::Body -->
@@ -36,7 +36,7 @@
 						<div class="kt-login__container">
 							<div class="kt-login__logo">
 								<a href="#">
-									<img src="{{ asset('public/assets/media/logos/logo-5.png') }}">
+									<img src="{{ asset('public/assets/media/logos/logo-5.png') }}" style="height: auto; width: 200px;">
 								</a>
 							</div>
 							<div class="kt-login__signin">

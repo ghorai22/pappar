@@ -49,15 +49,15 @@
                 </div>
                 <div class="col-md-6">
                   <label>Phone</label>
-                  <h4 id="phone">9679928900</h4>
+                  <h4 id="phone">7003307060</h4>
                 </div>
                 <div class="col-md-12">
                   <label>Email</label>
-                  <h4 id="email">testadmin@gmail.com</h4>
+                  <h4 id="email">mr.bikashghorai@gmail.com</h4>
                 </div>
                 <div class="col-md-12">
                   <label>Address</label>
-                  <h4 id="address">Garia, Kolkata, WB - 721156</h4>
+                  <h4 id="address">Gariahat, Kolkata, WB - 721156</h4>
                 </div>
               </div>
             </div>
@@ -149,10 +149,12 @@
     $("#booking").addClass('kt-menu__item--active');
   })
     function viewUser(id) {
+        loader('Please wait..');
         $(".modal-title").html('User Details');
         $("#dp").attr('src', 'public/loader.gif');
         $.get('single-subscriber/'+id, function(data){
             console.log(data);
+            Swal.close();
             let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
             let img = url.replace("public", "static");
             $("#dp").attr('src', img);
@@ -164,20 +166,34 @@
         })
     }
     function viewPhgrapher(id){
-        $(".modal-title").html('Photographer Details');
-        $("#dp").attr('src', 'public/loader.gif');
-        $.get('ph-subscriber/'+id, function(res){
-            console.log(res);
-            let data = res[0]
-            let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
-            let img = url.replace("public", "static");
-            $("#dp").attr('src', img);
-            $("#name").html(data.fullname);
-            $("#email").html(data.email);
-            $("#phone").html(data.mobileNO);
-            $("#address").html(data.billingAddress);
-            $("#viewModal").modal('show');
-        })
+      loader('Please wait..');
+      $(".modal-title").html('Photographer Details');
+      $("#dp").attr('src', 'public/loader.gif');
+      $.get('ph-subscriber/'+id, function(res){
+        console.log(res);
+        Swal.close();
+        let data = res[0]
+        let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
+        let img = url.replace("public", "static");
+        $("#dp").attr('src', img);
+        $("#name").html(data.fullname);
+        $("#email").html(data.email);
+        $("#phone").html(data.mobileNO);
+        $("#address").html(data.billingAddress);
+        $("#viewModal").modal('show');
+      })
+    }
+    function loader(msg){
+      Swal.fire({
+        title: msg,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        background: '#fff',
+        showConfirmButton: false,
+        onOpen: ()=>{
+            Swal.showLoading();
+        }
+      });
     }
 </script>
 @endsection
