@@ -305,7 +305,6 @@
       }
     });   
   }
-
   function stepOne(){
     let csrf = $("#csrf").val();
     let file = $("#dp").val();
