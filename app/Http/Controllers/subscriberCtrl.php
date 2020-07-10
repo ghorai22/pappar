@@ -50,7 +50,11 @@ class subscriberCtrl extends Controller
 		]);
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
-			return Response::json($res);
+			if(gettype($res) == 'object'){
+    			return Response::json($res);
+            }else{
+                return Response::json($res[0]);
+            }
 		}
     }
     public function update(Request $request)

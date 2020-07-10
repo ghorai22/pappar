@@ -78,7 +78,11 @@
                       </div>
                       <div class="col-md-5">
                         <label>Last Name</label>
+                        @if(count($nameArr) > 1)
                         <input type="text" name="lastname" id="lastname" class="form-control" value="{{$nameArr[1]}}">
+                        @else
+                        <input type="text" name="lastname" id="lastname" class="form-control">
+                        @endif
                       </div>
                       <div class="col-md-2">
                         <label>Age</label>

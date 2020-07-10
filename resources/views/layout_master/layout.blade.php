@@ -17,6 +17,7 @@
         <link rel="shortcut icon" href="{{ asset('public/assets/media/logos/favicon.png') }}" />
         <!-- datatables -->
         <link href="{{ asset('public/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <!-- toast error cdns -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css">
@@ -107,6 +108,7 @@
                     <div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
                         <div id="kt_aside_menu" class="kt-aside-menu " data-ktmenu-vertical="1" data-ktmenu-scroll="1" data-ktmenu-dropdown-timeout="500">
                             <ul class="kt-menu__nav ">
+                                @if(Session::get('loginType') == 'admin')
                                 <li class="kt-menu__item  kt-menu__item--active" aria-haspopup="true"><a href="{{ url('/') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <polygon points="0 0 24 0 24 24 0 24" />
@@ -115,6 +117,7 @@
                                     </g>
                                     </svg></span><span class="kt-menu__link-text">Dashboard</span></a>
                                 </li>
+                                @endif
                                 @if(Session::get('loginType') != 'user')
                                 <li class="kt-menu__item" aria-haspopup="true" id="photographer">
                                     <a href="{{ url('photographer') }}" class="kt-menu__link ">
@@ -135,6 +138,8 @@
                                 <li class="kt-menu__item" aria-haspopup="true" id="users"><a href="{{ url('users') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-user-secret" aria-hidden="true"></i></span><span class="kt-menu__link-text">Users</span></a>
                                 </li>
                                 @endif
+                                <li class="kt-menu__item" aria-haspopup="true" id="users"><a href="{{ url('logout') }}" class="kt-menu__link "><span class="kt-menu__link-icon"><i class="fa fa-sign-out" aria-hidden="true"></i></span><span class="kt-menu__link-text">Logout</span></a>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -172,7 +172,7 @@
       $.get('ph-subscriber/'+id, function(res){
         console.log(res);
         Swal.close();
-        let data = res[0]
+        let data = res;
         let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
         let img = url.replace("public", "static");
         $("#dp").attr('src', img);

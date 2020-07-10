@@ -38,11 +38,15 @@ class loginCtrl extends Controller
     			Session::put('token', $res->token);
     			return redirect()->to('/');
             }else{
-                Session::put('userid', $result[0]->_id);
-                Session::put('name', $result[0]->fullname);
-                Session::put('loginType', $result[0]->loginType);
-                Session::put('token', $res->token);
-                return redirect()->to('/');
+                for ($i=0; $i < count($result); $i++) { 
+                    if($request->email == $result[$i]->email){
+                        Session::put('userid', $result[$i]->_id);
+                        Session::put('name', $result[$i]->fullname);
+                        Session::put('loginType', $result[$i]->loginType);
+                        Session::put('token', $res->token);
+                        return redirect()->to('/');
+                    }
+                }
             }
 		}else{
 			Session::flash('error', 'Something wrong!');

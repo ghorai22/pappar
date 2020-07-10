@@ -21,7 +21,8 @@ class photographerCtrl extends Controller
 				]);
 				if($response->getStatusCode() == 200){
 					$res = json_decode($response->getBody()->getContents());
-					$result[0] = $res;
+					$result = $res;
+
 					$data['photographers'] = $result;
 					return view('photographer', $data);
 				}
@@ -58,7 +59,11 @@ class photographerCtrl extends Controller
 		]);
 		if($response->getStatusCode() == 200){
 			$res = json_decode($response->getBody()->getContents());
-			return Response::json($res);
+            if(gettype($res) == 'object'){
+    			return Response::json($res);
+            }else{
+                return Response::json($res[0]);
+            }
 		}
     }
     public function stepOne(Request $request)

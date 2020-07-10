@@ -52,7 +52,11 @@
                 <tbody>
                    @foreach($photographers as $photographer)
                    <tr>
-                    <td>{{date('F jS, Y', strtotime($photographer->updated_at))}}</td>
+                    <td>
+                      @if(isset($photographer->updated_at) && !empty($photographer->updated_at))
+                        {{date('F jS, Y', strtotime($photographer->updated_at))}}
+                      @endif
+                    </td>
                     @if(isset($photographer->photo) && !empty($photographer->photo))
                     <td>
                       <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $photographer->photo[0])}}">
