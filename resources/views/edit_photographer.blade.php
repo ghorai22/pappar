@@ -41,7 +41,7 @@
               <a class="nav-link" id="details-tab" data-toggle="tab" href="#details" role="tab" aria-controls="details" aria-selected="false"><i class="fa fa-id-card" aria-hidden="true"></i> Professional Details</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="payment" aria-selected="false"><i class="fa fa-university" aria-hidden="true"></i> Payment Details</a>
+              <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false"><i class="fa fa-info-circle" aria-hidden="true"></i> Info</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="portfolio-tab" data-toggle="tab" href="#portfolio" role="tab" aria-controls="portfolio" aria-selected="false">
@@ -69,9 +69,20 @@
                   </div>
                   <div class="col-md-9">
                     <div class="row">
-                      <div class="col-md-6">
-                        <label>Full Name</label>
-                        <input type="text" name="name" id="fullname" class="form-control" value="{{$phgrapher->fullname}}">
+                      @php
+                      $nameArr = explode(" ", $phgrapher->fullname);
+                      @endphp
+                      <div class="col-md-5">
+                        <label>First Name</label>
+                        <input type="text" name="firstname" id="firstname" class="form-control" value="{{$nameArr[0]}}">
+                      </div>
+                      <div class="col-md-5">
+                        <label>Last Name</label>
+                        <input type="text" name="lastname" id="lastname" class="form-control" value="{{$nameArr[1]}}">
+                      </div>
+                      <div class="col-md-2">
+                        <label>Age</label>
+                        <input type="text" name="age" id="age" class="form-control" value="{{$phgrapher->pinfo[0]->age}}">
                       </div>
                       <div class="col-md-6">
                         <label>Email</label>
@@ -80,10 +91,6 @@
                       <div class="col-md-6">
                         <label>Phone</label>
                         <input type="text" name="phone" id="phone" class="form-control" value="{{$phgrapher->mobileNO}}">
-                      </div>
-                      <div class="col-md-6">
-                        <label>Age</label>
-                        <input type="text" name="age" id="age" class="form-control" value="{{$phgrapher->pinfo[0]->age}}">
                       </div>
                       <div class="col-md-6">
                         <label>Brief Bio</label>
@@ -316,38 +323,44 @@
                 </div>
               </div></form>
             </div>
-            <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
               <div class="">
                 <div class="row">
-                  <div class="col-md-4">
-                    <label>Account Name</label>
-                    <input type="text" name="" class="form-control">
+                  <div class="col-md-6">
+                    <label>Registration Date</label>
+                    <input type="text" name="created_at" class="form-control" value="{{ date('F jS, Y', strtotime($phgrapher->pinfo[0]->created_at)) }}" disabled="">
                   </div>
-                  <div class="col-md-4">
-                    <label>Payment Method</label>
-                    <select class="form-control">
-                      <option>Bank Transfer</option>
-                      <option>UPI</option>
+                  <div class="col-md-6">
+                    <label>Account Status</label>
+                    @if(\Session::get('loginType') == 'admin')
+                    <select class="form-control" id="accStatus">
+                      <option value="0">Inactive</option>
+                      @if($phgrapher->status == 1)
+                      <option value="1" selected="">Active</option>
+                      @else
+                      <option value="1">Active</option>
+                      @endif
                     </select>
-                  </div>
-                  <div class="col-md-4">
-                    <label>Tax Info (Optional)</label>
-                    <input type="text" name="" class="form-control">
-                  </div>
-                  <div class="col-md-6">
-                    <label>Account Number</label>
-                    <input type="text" name="" class="form-control">
-                  </div>
-                  <div class="col-md-6">
-                    <label>IFSC Code</label>
-                    <input type="text" name="" class="form-control">
+                    @else
+                    @if($phgrapher->status == 1)
+                    <input type="text" name="status" value="Active" disabled="">
+                    @else
+                    <input type="text" name="status" value="Inactive" disabled="">
+                    @endif
+                    @endif
                   </div>
                 </div>
                 <br>
                 <div class="row">
                   <div class="col-md-11" style="text-align: right;">
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('details-tab');">&nbsp;&nbsp;&nbsp;Previus&nbsp;&nbsp;&nbsp;</a>
-                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('portfolio-tab');">Update & Next</a>
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('details-tab');">
+                    &nbsp;&nbsp;&nbsp;Previus&nbsp;&nbsp;&nbsp;</a>
+                    @if(\Session::get('loginType') == 'admin')
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="stepThree();">Update & Next</a>
+                    @else
+                    <a href="#!" class="btn btn-primary nxt-btn" onclick="next('portfolio-tab');">
+                    &nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;</a>
+                    @endif
                   </div>
                 </div>
               </div>
@@ -472,7 +485,7 @@
         },
         success: function (data) {
           console.log(data);
-          $("#portfolio-tab").click();
+          $("#info-tab").click();
           Swal.close();
         },
         error: function (data) {
@@ -483,6 +496,29 @@
     }else{
       $("#profile-tab").click();
     }
+  }
+  function stepThree(){
+    let csrf = $("#csrf").val();
+    let id = $("#phId").val();
+    let status = $("#accStatus").val();
+    $.ajax({
+      headers: {'X-CSRF-TOKEN': csrf },
+      url: "{{url('step-three')}}",
+      method: "POST",
+      data: {id: id, status: status},
+      beforeSend: function(){
+        loader('Please wait..');
+      },
+      success: function (data) {
+        console.log(data);
+        $("#portfolio-tab").click();
+        Swal.close();
+      },
+      error: function (data) {
+        console.log('Error:', data);
+        errPop(data.responseJSON.message);
+      }
+    });
   }
   function stepFour(){
     let csrf = $("#csrf2").val();

@@ -28,6 +28,7 @@ Route::get('ph-subscriber/{id}', 'photographerCtrl@single');
 Route::post('step-one', 'photographerCtrl@stepOne');
 Route::post('step-one-update', 'photographerCtrl@stepOneUpdate');
 Route::post('step-two', 'photographerCtrl@stepTwo');
+Route::post('step-three', 'photographerCtrl@stepThree');
 Route::post('step-four', 'photographerCtrl@stepFour');
 Route::post('upload-img', 'photographerCtrl@upload');
 

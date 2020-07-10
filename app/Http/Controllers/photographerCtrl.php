@@ -102,7 +102,7 @@ class photographerCtrl extends Controller
 
         if ($request->dp == 'no-change') {
             $data = (object)[
-                'fullname' => $request->name,
+                'fullname' => $request->firstname." ".$request->lastname,
                 'email' => $request->email,
                 'mobileNO' => $request->phone,
                 'billingAddress' => $request->address,
@@ -112,7 +112,7 @@ class photographerCtrl extends Controller
             ];
         }else{
             $data = (object)[
-                'fullname' => $request->name,
+                'fullname' => $request->firstname." ".$request->lastname,
                 'email' => $request->email,
                 'mobileNO' => $request->phone,
                 'billingAddress' => $request->address,
@@ -174,7 +174,7 @@ class photographerCtrl extends Controller
             $img = $request->file('dp');
 
             $name = $time.".".$img->clientExtension();
-            $path = public_path().'\upload\\';
+            $path = public_path().'/upload/';
             $img->move($path, $name);
 
             $client = new \GuzzleHttp\Client();
@@ -200,6 +200,19 @@ class photographerCtrl extends Controller
             return Response::json($data);
         }
     }
+    public function stepThree(Request $request)
+    {
+        $token = Session::get('token');
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://api.paparazzme.blazingtrail.in/v1/admin/change-status?id='.$id;
+        $response = $client->get($url, [
+            'headers' => ['auth' => $token]
+        ]);
+        if($response->getStatusCode() == 200){
+            $res = json_decode($response->getBody()->getContents());
+            return Response::json($res);
+        }
+    }
     public function stepFour(Request $request)
     {
     	$token = Session::get('token');
@@ -208,7 +221,7 @@ class photographerCtrl extends Controller
         $time = date('ymdHis');
         $img = $images[$noRow];
         $name = $time.$noRow.".".$img->clientExtension();
-        $path = public_path().'\upload\\';
+        $path = public_path().'/upload/';
         $img->move($path, $name);
 
         $client = new \GuzzleHttp\Client();

@@ -26,7 +26,7 @@
         <div class="kt-subheader__main">
             <h3 class="kt-subheader__title">Photogapher</h3>
             <span class="kt-subheader__separator kt-subheader__separator--v"></span>
-            <a href="{{ url('photographer-add') }}" class="btn btn-lg btn-primary ml-auto" id="addBtn"><i class="fa fa-user-plus" aria-hidden="true"></i> Create New</a>
+            <!-- <a href="{{ url('photographer-add') }}" class="btn btn-lg btn-primary ml-auto" id="addBtn"><i class="fa fa-user-plus" aria-hidden="true"></i> Create New</a> -->
         </div>
     </div>
 </div>

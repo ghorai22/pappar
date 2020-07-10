@@ -3,7 +3,7 @@
     <head>
         <base href="">
         <meta charset="utf-8" />
-        <title>Papparazzme | Dashboard</title>
+        <title>PaparazzMe | Dashboard</title>
         <meta name="description" content="Updates and statistics">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700">
@@ -183,12 +183,12 @@
                     <div class="kt-footer  kt-grid__item kt-grid kt-grid--desktop kt-grid--ver-desktop" id="kt_footer">
                         <div class="kt-container  kt-container--fluid ">
                             <div class="kt-footer__copyright">
-                                2020&nbsp;&copy;&nbsp;<a href="#!" target="_blank" class="kt-link">Papparazzme</a>
+                                2020&nbsp;&copy;&nbsp;<a href="#!" target="_blank" class="kt-link">PaparazzMe</a>
                             </div>
                             <div class="kt-footer__menu">
-                                <a href="#" target="_blank" class="kt-footer__menu-link kt-link">About</a>
+                                <!-- <a href="#" target="_blank" class="kt-footer__menu-link kt-link">About</a>
                                 <a href="#" target="_blank" class="kt-footer__menu-link kt-link">Team</a>
-                                <a href="#" target="_blank" class="kt-footer__menu-link kt-link">Contact</a>
+                                <a href="#" target="_blank" class="kt-footer__menu-link kt-link">Contact</a> -->
                             </div>
                         </div>
                     </div>

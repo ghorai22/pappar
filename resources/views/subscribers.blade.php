@@ -55,8 +55,12 @@
             <div class="col-md-9" id="abc">
               <div class="row">
                 <div class="col-md-6">
-                  <label>Full Name</label>
-                  <input type="text" name="fullname" id="fullname" class="form-control">
+                  <label>First Name</label>
+                  <input type="text" name="firstname" id="firstname" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label>Last Name</label>
+                  <input type="text" name="lastname" id="lastname" class="form-control">
                 </div>
                 <div class="col-md-6">
                   <label>Email</label>
@@ -66,7 +70,7 @@
                   <label>Phone</label>
                   <input type="text" name="phone" id="phone" class="form-control">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <label>Address</label>
                   <textarea class="form-control" name="address" id="address" rows="3"></textarea>
                 </div>
@@ -176,7 +180,10 @@
         $("#imgView").hide();
         $("#imgEdit").show();
       }
-      $("#fullname").val(data.fullname);
+      let flname = data.fullname;
+      let nameArr = flname.split(" ");
+      $("#firstname").val(nameArr[0]);
+      $("#lastname").val(nameArr[1]);
       $("#email").val(data.email);
       $("#phone").val(data.mobileNO);
       $("#address").val(data.billingAddress);
@@ -244,7 +251,7 @@
   function updateData(dp){
     let csrf = $("#csrf").val();
     let id = $("#userId").val();
-    let fname = $("#fullname").val();
+    let fname = $("#firstname").val()+" "+$("#lastname").val();
     let email = $("#email").val();
     let phone = $("#phone").val();
     let address = $("#address").val();
