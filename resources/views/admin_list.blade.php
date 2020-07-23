@@ -97,7 +97,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
-                        <th>Status</th>
+                        <!-- <th>Status</th> -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -109,13 +109,13 @@
                      <td>{{$user->email}}</td>
                      <td>{{$user->mobileNO}}</td>
                       <td>{{$user->billingAddress}}</td>
-                      @if($user->status == '0')
+                      <!-- @if($user->status == '0')
                         <td onclick="statusChange('{{$user->_id}}');">
                           <span class="label label-pending"> Inactive </span>
                         </td>
                       @else
                         <td><span class="label label-success"> Active </span></td>
-                      @endif
+                      @endif -->
 
                      <td>
                       <a href="#!" onclick="editUser('{{$user->_id}}')"><i class="fas fa-pencil-alt"></i></a> |

@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Session;
+use App\Http\Requests\LoginReq;
 
 class loginCtrl extends Controller
 {
     public function index()
     {
-    	return view('login');
+        if(Session::exists('userid'))
+            return redirect()->back();
+        else
+    	    return view('login');
     }
-    public function login(Request $request)
+    public function login(LoginReq $request)
     {
     	$client = new \GuzzleHttp\Client();
     	$data = (object)[
@@ -50,7 +54,7 @@ class loginCtrl extends Controller
             }
 		}else{
 			Session::flash('error', 'Something wrong!');
-			return redirect()->back();
+			return redirect()->to('login');
 		}
     }
     public function logout()

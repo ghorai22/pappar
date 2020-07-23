@@ -108,7 +108,7 @@
                       <th>Address</th>
                       <th>Mobile</th>
                       <th>FB</th>
-                      <th>Active</th>
+                      <!-- <th>Active</th> -->
                       <th>Actions</th>
                     </tr>
                 </thead>
@@ -129,7 +129,7 @@
                      <td>{{substr($subscriber->socialid, 0, 20)}}..</td>
                     @endif
 
-                    @if(Session::get('loginType') == 'admin')
+                    <!-- @if(Session::get('loginType') == 'admin')
                       @if($subscriber->status == '0')
                         <td onclick="statusChange('{{$subscriber->_id}}');">
                           <span class="label label-pending"> Inactive </span>
@@ -145,7 +145,7 @@
                       @else
                         <td><span class="label label-success"> Active </span></td>
                       @endif
-                    @endif
+                    @endif -->
                     @if(Session::get('loginType') == 'admin')
                      <td>
                       <a href="#!" onclick="editUser('{{$subscriber->_id}}')"><i class="fas fa-pencil-alt"></i></a> |

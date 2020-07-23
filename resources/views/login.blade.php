@@ -46,10 +46,20 @@
 								<form class="kt-form" method="post" action="{{ url('/login-check') }}">
 									{{ csrf_field() }}
 									<div class="input-group">
-										<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">
+										<input class="form-control" type="email" value="{{ old('email') }}" placeholder="Enter Email-ID" name="email" autocomplete="off">
+										@if($errors->has('email'))
+											<div class="alert alert-warning">
+												<strong>Warning!!</strong> {{$errors->first('email')}}
+											</div>
+										@endif
 									</div>
 									<div class="input-group">
 										<input class="form-control" type="password" placeholder="Password" name="password">
+										@if($errors->has('password'))
+											<div class="alert alert-warning">
+												<strong>Warning!!</strong> {{$errors->first('password')}}
+											</div>
+										@endif
 									</div>
 									<div class="row kt-login__extra">
 										<div class="col">
