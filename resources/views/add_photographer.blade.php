@@ -398,7 +398,7 @@
               let nou = j + 1;
               $("#swal2-content").html(nou+" upload of "+nof);
               let url = 'https://api.paparazzme.blazingtrail.in/'+data.file;
-              let html = '<div class="col-md-4"><img src="'+url.replace("public", "static")+'" class="portfolio-img"></div>';
+              let html = '<div class="col-md-4"><img src="'+url+'" class="portfolio-img"></div>';
               $("#portfolioView").append(html);
             },
             error: function (data) {

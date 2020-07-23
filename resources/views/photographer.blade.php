@@ -59,7 +59,7 @@
                     </td>
                     @if(isset($photographer->photo) && !empty($photographer->photo))
                     <td>
-                      <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $photographer->photo[0])}}">
+                      <img src="https://api.paparazzme.blazingtrail.in/{{$photographer->photo[0]}}">
                     </td>
                     @else
                     <td></td>
@@ -115,6 +115,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#invoiceTable').DataTable();
     $(".kt-menu__item").each(function(){
       $(this).removeClass('kt-menu__item--active');
     })

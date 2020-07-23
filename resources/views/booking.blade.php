@@ -143,6 +143,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#invoiceTable').DataTable();
     $(".kt-menu__item").each(function(){
       $(this).removeClass('kt-menu__item--active');
     })

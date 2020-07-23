@@ -58,7 +58,7 @@
                   <div class="col-md-3">
                      @if(isset($phgrapher->photo) && !empty($phgrapher->photo))
                      <span id="imgView">
-                      <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $phgrapher->photo[0])}}" style="height: auto; width: 100%;">
+                      <img src="https://api.paparazzme.blazingtrail.in/{{$phgrapher->photo[0]}}" style="height: auto; width: 100%;">
                       <a href="#!" id="change"><h5 class="change-dp"><i class="fa fa-pencil" aria-hidden="true"></i> Change DP</h5></a>
                     </span>
                     @endif
@@ -86,7 +86,11 @@
                       </div>
                       <div class="col-md-2">
                         <label>Age</label>
+                        @if(array_key_exists('age', $phgrapher->pinfo[0]))
                         <input type="text" name="age" id="age" class="form-control" value="{{$phgrapher->pinfo[0]->age}}">
+                        @else
+                        <input type="text" name="age" id="age" class="form-control" >
+                        @endif
                       </div>
                       <div class="col-md-6">
                         <label>Email</label>
@@ -98,7 +102,11 @@
                       </div>
                       <div class="col-md-6">
                         <label>Brief Bio</label>
-                        <textarea class="form-control" name="bio" id="bb" rows="3">{{$phgrapher->pinfo[0]->briefBio}}</textarea>
+                        @if(array_key_exists('age', $phgrapher->pinfo[0]))
+                        <textarea class="form-control" name="bio" id="bb" value="{{$phgrapher->pinfo[0]->briefBio}}" rows="3">{{$phgrapher->pinfo[0]->briefBio}}</textarea>
+                        @else 
+                        <textarea class="form-control" name="bio" id="bb" rows="3"></textarea>
+                        @endif
                       </div>
                       <div class="col-md-6">
                         <label>Address</label>
@@ -549,7 +557,7 @@
               let nou = j + 1;
               $("#swal2-content").html(nou+" upload of "+nof);
               let url = 'https://api.paparazzme.blazingtrail.in/'+data.file;
-              let html = '<div class="col-md-4"><img src="'+url.replace("public", "static")+'" class="portfolio-img"></div>';
+              let html = '<div class="col-md-4"><img src="'+url+'" class="portfolio-img"></div>';
               $("#portfolioView").append(html);
             },
             error: function (data) {

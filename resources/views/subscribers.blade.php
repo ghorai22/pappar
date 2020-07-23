@@ -117,7 +117,7 @@
                    <tr>
                     <td>{{date('F jS, Y', strtotime($subscriber->updated_at))}}</td>
                     <td>
-                      <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $subscriber->photo[0])}}">
+                      <img src="https://api.paparazzme.blazingtrail.in/{{$subscriber->photo[0]}}">
                     </td>
                      <td>{{$subscriber->fullname}}</td>
                      <td>{{$subscriber->email}}</td>
@@ -126,7 +126,7 @@
                     @if($subscriber->socialid == 'dashboard')
                      <td>NULL</td>
                     @else
-                     <td>{{$subscriber->socialid}}</td>
+                     <td>{{substr($subscriber->socialid, 0, 20)}}..</td>
                     @endif
 
                     @if(Session::get('loginType') == 'admin')
@@ -165,6 +165,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#invoiceTable').DataTable();
     $(".kt-menu__item").each(function(){
       $(this).removeClass('kt-menu__item--active');
     })
@@ -175,7 +176,7 @@
       $("#userId").val(data._id);
       if(data.photo.length > 0 && data.photo[0] != 'N/A'){
         let url = 'https://api.paparazzme.blazingtrail.in/'+data.photo[0];
-        $("#photo").attr('src', url.replace("public", "static"));
+        $("#photo").attr('src', url);
       }else{
         $("#imgView").hide();
         $("#imgEdit").show();

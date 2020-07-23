@@ -72,7 +72,7 @@
             <div class="row">
                 <div class="col-md-3" style="margin-top: 7px;">
                     @if(!empty($photographers[0]->udetails[0]->photo[0]))
-                    <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $photographers[0]->udetails[0]->photo[0]) }}" style="width: 100%; height: auto;">
+                    <img src="https://api.paparazzme.blazingtrail.in/{{$photographers[0]->udetails[0]->photo[0] }}" style="width: 100%; height: auto;">
                     @endif
                 </div>
                 <div class="col-md-9">
@@ -91,7 +91,7 @@
             <div class="row">
                 <div class="col-md-3" style="margin-top: 7px;">
                     @if(!empty($photographers[0]->pdetails[0]))
-                    <img src="https://api.paparazzme.blazingtrail.in/static/{{str_replace('public/', '', $photographers[0]->pdetails[0]->photo[0]) }}" style="width: 100%; height: auto;">
+                    <img src="https://api.paparazzme.blazingtrail.in/{{$photographers[0]->pdetails[0]->photo[0] }}" style="width: 100%; height: auto;">
                     @endif
                 </div>
                 <div class="col-md-9">
