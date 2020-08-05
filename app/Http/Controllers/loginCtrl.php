@@ -62,4 +62,40 @@ class loginCtrl extends Controller
         Session::flush();
         return redirect()->to('login');
     }
+    public function forgotPass()
+    {
+        return view('change');
+    }
+    public function changePass(Request $request)
+    {
+        $pass = $request->password;
+        $cnfPass = $request->confirm_password;
+
+        if($pass == $cnfPass){
+            $client = new \GuzzleHttp\Client();
+            $data = (object)[
+                'email' => $request->email,
+                'pwd' => $request->password
+            ];
+            $url = 'https://api.paparazzme.blazingtrail.in/v1/password-change';
+            $response = $client->post($url, [
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => json_encode($data)
+            ]);
+
+            if($response->getStatusCode() == 200){
+                $res = json_decode($response->getBody()->getContents());
+                if($res == '1'){
+                    Session::flash('success', 'Password change successful.');
+                    return redirect()->to('login');
+                }else{
+                    Session::flash('error', 'Something wrong, try again');
+                    return redirect()->to('forgot-password');
+                }
+            }
+        }else{
+            Session::flash('error', 'Passwords do not match.');
+            return redirect()->to('forgot-password');
+        }
+    }
 }

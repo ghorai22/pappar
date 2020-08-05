@@ -43,23 +43,23 @@
 								<div class="kt-login__head">
 									<h3 class="kt-login__title">Sign In To Admin</h3>
 								</div>
+								@if(\Session::has('error'))
+			                      <div class="alert alert-warning">
+			                        <strong>Warning!! </strong> {{\Session::get('error')}}
+			                      </div>
+			                    @endif
+			                    @if(\Session::has('success'))
+			                      <div class="alert alert-success">
+			                        <strong>Success!! </strong> {{\Session::get('success')}}
+			                      </div>
+			                    @endif
 								<form class="kt-form" method="post" action="{{ url('/login-check') }}">
 									{{ csrf_field() }}
 									<div class="input-group">
-										<input class="form-control" type="email" value="{{ old('email') }}" placeholder="Enter Email-ID" name="email" autocomplete="off">
-										@if($errors->has('email'))
-											<div class="alert alert-warning">
-												<strong>Warning!!</strong> {{$errors->first('email')}}
-											</div>
-										@endif
+										<input class="form-control" type="email" placeholder="Enter Email-ID" name="email" autocomplete="off">
 									</div>
 									<div class="input-group">
 										<input class="form-control" type="password" placeholder="Password" name="password">
-										@if($errors->has('password'))
-											<div class="alert alert-warning">
-												<strong>Warning!!</strong> {{$errors->first('password')}}
-											</div>
-										@endif
 									</div>
 									<div class="row kt-login__extra">
 										<div class="col">
@@ -69,7 +69,7 @@
 											</label>
 										</div>
 										<div class="col kt-align-right">
-											<a href="javascript:;" id="kt_login_forgot" class="kt-login__link">Forget Password ?</a>
+											<a href="{{ url('forgot-password') }}" id="kt_login_forgot" class="kt-login__link">Forget Password ?</a>
 										</div>
 									</div>
 									<div class="kt-login__actions">

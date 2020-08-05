@@ -5,6 +5,8 @@ Route::get('/', 'dashCtrl@index');
 Route::get('login', 'loginCtrl@index');
 Route::post('login-check', 'loginCtrl@login');
 Route::get('logout', 'loginCtrl@logout');
+Route::get('forgot-password', 'loginCtrl@forgotPass');
+Route::post('password-change', 'loginCtrl@changePass');
 
 Route::get('photographer', 'photographerCtrl@index');
 Route::get('photographer-add', 'photographerCtrl@add');
