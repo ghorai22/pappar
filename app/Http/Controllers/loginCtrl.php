@@ -87,7 +87,7 @@ class loginCtrl extends Controller
                 $res = json_decode($response->getBody()->getContents());
                 if($res == '1'){
                     Session::flash('success', 'Password change successful.');
-                    return redirect()->to('login');
+                    return redirect()->to('forgot-password');
                 }else{
                     Session::flash('error', 'Something wrong, try again');
                     return redirect()->to('forgot-password');

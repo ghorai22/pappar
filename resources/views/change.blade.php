@@ -43,9 +43,14 @@
                 <div class="kt-login__head">
                   <h3 class="kt-login__title">Forgot Password</h3>
                 </div>
+                @if(\Session::has('success'))
+                  <div class="alert alert-success">
+                    <strong>Success!!&nbsp;</strong> {{\Session::get('success')}}
+                  </div>
+                @endif
                 @if(\Session::has('error'))
                   <div class="alert alert-warning">
-                    <strong>Warning!! </strong> {{\Session::get('error')}}
+                    <strong>Warning!!&nbsp;</strong> {{\Session::get('error')}}
                   </div>
                 @endif
                 <form class="kt-form" method="post" action="{{ url('password-change') }}">
@@ -64,7 +69,7 @@
                       
                     </div>
                     <div class="col kt-align-right">
-                      <a href="{{ url('login') }}" id="kt_login_forgot" class="kt-login__link">Back to login</a>
+                      <!-- <a href="{{ url('login') }}" id="kt_login_forgot" class="kt-login__link">Back to login</a> -->
                     </div>
                   </div>
                   <div class="kt-login__actions">
